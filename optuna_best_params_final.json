@@ -1,0 +1,15 @@
+{
+  "best_eval_loss": 0.2807295322418213,
+  "best_trial_number": 2,
+  "best_params": {
+    "learning_rate": 4.4447541666908114e-05,
+    "batch_size": 16,
+    "num_epochs": 2,
+    "weight_decay": 0.02014847788415866,
+    "warmup_steps": 800
+  },
+  "optimization_time": "2025-07-22 06:02:40",
+  "total_trials": 10,
+  "successful_trials": 5,
+  "version": "final_clean_optuna_only"
+}

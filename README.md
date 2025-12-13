@@ -1,10 +1,13 @@
 # 2025 Samsung AI Challenge – BLIP VQA Fine-tuning
 
 ## 프로젝트 소개 & 주요 성과
-삼성 Collegiate Programming Challenge (AI 부문)에 참가하기 위해 **BLIP (Bootstrapping Language-Image Pre-training) ViT-L** 모델을 기반으로 Visual Question Answering(VQA) 성능을 끌어올린 실험 노트북과 최적 하이퍼파라미터 산출 결과를 공유합니다.  
+[삼성 Collegiate Programming Challenge (AI 부문)](https://dacon.io/competitions/official/236500/overview/description)에 참가하기 위해 **BLIP (Bootstrapping Language-Image Pre-training) ViT-L** 모델을 기반으로 Visual Question Answering(VQA) 성능을 끌어올린 실험 노트북과 최적 하이퍼파라미터 산출 결과를 공유합니다.  
 - `BLIP_Hyperparameter_Tuning.ipynb`에서 **Optuna 10회 탐색**을 진행해 `eval_loss 0.2807`을 달성한 조합을 확보했습니다. (`optuna_best_params_final.json` 참고)  
 - `BLIP_ViT_L_with_less_data.ipynb`는 **데이터 20%만 사용한 경량 파인튜닝 전략**으로 동일한 실험 흐름을 빠르게 재현할 수 있도록 구성되어 있습니다.  
 - `Answersheet.ipynb`는 최종 리더보드 제출을 위한 예측 생성/검증 과정을 정리한 노트입니다.
+
+### 최종 성과
+테스트 셋 정확도를 약 25%에서 **66%** 로 향상시켰으며, 전체 참가자 중 **상위 9%** 를 기록했습니다.
 
 ---
 
@@ -30,7 +33,7 @@
 ---
 
 ## 데이터셋 (VQAv2 from Visual Question Answering 2.0)
-아래 파일들은 VisualQA 공식 페이지(https://visualqa.org/download.html)에서 내려받아 `dataset/VQAv2/`에 배치했습니다. 현재 로컬 경로는 `C:\Users\Lenovo\Study\2025_Samsung_AI_Challenge\dataset\VQAv2` 입니다.
+아래 파일들은 VisualQA 공식 페이지(https://visualqa.org/download.html)에서 내려받아 `dataset/VQAv2/`에 배치했습니다.
 
 | 구분 | 사용 파일 | VisualQA 공식 다운로드 링크 |
 |------|-----------|-----------------------------|

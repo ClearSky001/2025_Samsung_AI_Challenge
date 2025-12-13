@@ -37,10 +37,10 @@
 
 | 구분 | 사용 파일 | VisualQA 공식 다운로드 링크 |
 |------|-----------|-----------------------------|
-| Train Questions | `Train/questions/v2_OpenEnded_mscoco_train2014_questions.json` | https://visualqa.org/data2/vqa/v2_OpenEnded_mscoco_train2014_questions.zip |
-| Train Annotations | `Train/annotations/v2_mscoco_train2014_annotations.json` | https://visualqa.org/data2/vqa/v2_Annotations_Train_mscoco.zip |
-| Validation Questions | `Validation/questions/v2_OpenEnded_mscoco_val2014_questions.json` | https://visualqa.org/data2/vqa/v2_OpenEnded_mscoco_val2014_questions.zip |
-| Validation Annotations | `Validation/annotations/v2_mscoco_val2014_annotations.json` | https://visualqa.org/data2/vqa/v2_Annotations_Val_mscoco.zip |
+| Train Questions | `Train/questions/v2_OpenEnded_mscoco_train2014_questions.json` | https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Questions_Train_mscoco.zip |
+| Train Annotations | `Train/annotations/v2_mscoco_train2014_annotations.json` | https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Annotations_Train_mscoco.zip |
+| Validation Questions | `Validation/questions/v2_OpenEnded_mscoco_val2014_questions.json` | https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Questions_Val_mscoco.zip |
+| Validation Annotations | `Validation/annotations/v2_mscoco_val2014_annotations.json` | https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Annotations_Val_mscoco.zip |
 | MSCOCO Train Images | `Train/train2014/` | http://images.cocodataset.org/zips/train2014.zip |
 | MSCOCO Val Images | `Validation/val2014/` | http://images.cocodataset.org/zips/val2014.zip |
 

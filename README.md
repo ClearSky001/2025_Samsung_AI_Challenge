@@ -33,7 +33,7 @@
 ---
 
 ## 데이터셋 (VQAv2 from Visual Question Answering 2.0)
-아래 파일들은 VisualQA 공식 페이지(https://visualqa.org/download.html)에서 내려받아 `dataset/VQAv2/`에 배치했습니다.
+아래 파일들은 [VisualQA 공식 페이지](https://visualqa.org/download.html)에서 내려받아 `dataset/VQAv2/`에 배치했습니다.
 
 | 구분 | 사용 파일 | VisualQA 공식 다운로드 링크 |
 |------|-----------|-----------------------------|

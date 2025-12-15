@@ -131,14 +131,6 @@
 
 ---
 
-## 향후 계획
-1. **전체 코드 공개**: `blip_finetune.py`, `run_final_training_with_optimal_params.py` 등 로컬 스크립트를 정리하여 리포지터리에 추가할 예정입니다.  
-2. **추가 실험**: 학습 스케줄러, 이미지 증강, multi-task 손실 적용으로 성능 향상.  
-3. **서비스화**: 추론 파이프라인을 FastAPI/Gradio와 연동해 데모 배포.  
-4. **데이터 확장**: VQAv2 test 단계 및 다른 멀티모달 QA 데이터셋(VQA-CP, GQA)으로 일반화 검증.
-
----
-
 ## 개인 기여
 - VisualQA VQAv2 데이터 정리, 샘플 세트 구성, GPU 모니터링 템플릿 설계  
 - Optuna 실험 설계/리포팅 및 베스트 하이퍼파라미터 도출  

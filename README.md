@@ -2,10 +2,10 @@
 
 ## 프로젝트 소개 & 주요 성과
 [삼성 Collegiate Programming Challenge (AI 부문)](https://dacon.io/competitions/official/236500/overview/description)에 참가하기 위해 **BLIP (Bootstrapping Language-Image Pre-training) ViT-L** 모델을 기반으로 Visual Question Answering(VQA) 성능을 끌어올린 실험 노트북과 최적 하이퍼파라미터 산출 결과를 공유합니다.  
-- `BLIP_Hyperparameter_Tuning.ipynb`에서 **Optuna 10회 탐색**을 진행해 `eval_loss 0.2807`을 달성한 조합을 확보했습니다. (`optuna_best_params_final.json` 참고) 최적 세팅은 `run_final_training_with_optimal_params.py`에서 자동으로 불러와 전체 학습을 수행합니다.  
-- `BLIP_ViT_L_with_less_data.ipynb`는 **데이터 20%만 사용한 경량 파인튜닝 전략**으로 동일한 실험 흐름을 빠르게 재현할 수 있도록 구성되어 있습니다. RTX 4080 Laptop 한정 최적화가 필요한 경우 `BLIP_ViT_L_RTX4080_Optimized.ipynb` 및 `_AttnFixed_Sampled.ipynb`를 통해 VRAM 12GB 환경에서도 안정적으로 재현할 수 있습니다.  
-- `Answersheet.ipynb`는 최종 리더보드 제출을 위한 예측 생성/검증 과정을 정리한 노트입니다. BLIP Teacher Forcing + OpenCLIP + BLIP 생성 기반 RapidFuzz 점수 조합, TTA, confidence weighting을 포함하는 최신 파이프라인을 반영했습니다.  
-- `BLIP_ViT_L_Finetuning/` 모듈에는 `blip_finetune.py`, `run_sweep.py`, `preprocess_vqav2.py`, `quick_start.py`, `requirements.txt` 등이 포함되어 있어 CLI 기반 실험 및 W&B Sweep 자동화를 지원합니다.
+- `BLIP_Hyperparameter_Tuning.ipynb`에서 **Optuna 10회 탐색**을 진행해 `eval_loss 0.2807`을 달성한 조합을 확보했습니다. (`optuna_best_params_final.json` 참고)
+- `BLIP_ViT_L_with_less_data.ipynb`는 **데이터 20%만 사용한 경량 파인튜닝 전략**으로 동일한 실험 흐름을 빠르게 재현할 수 있도록 구성되어 있습니다.
+- `Answersheet.ipynb`는 최종 리더보드 제출을 위한 예측 생성/검증 과정을 정리한 노트입니다. BLIP Teacher Forcing + OpenCLIP + BLIP 생성 기반 RapidFuzz 점수 조합, TTA, confidence weighting을 포함하는 최신 파이프라인을 반영했습니다.
+- `BLIP_ViT_L_Finetuning/` 모듈에는 `blip_finetune.py`, `run_sweep.py`, `preprocess_vqav2.py`, `quick_start.py`, `requirements.txt` 등이 포함되어 있어 CLI 기반 실험 및 W&B Sweep 자동화를 지원합니다. 추가로 `BLIP(ViT-L)_Test.ipynb`와 `Run_QuickStart.ipynb`를 통해 스크립트를 노트북 환경에서 빠르게 확인할 수 있습니다.
 
 ### 최종 성과
 테스트 셋 정확도를 약 25%에서 **66%** 로 향상시켰으며, 전체 참가자 중 **상위 9%** 를 기록했습니다.
@@ -17,9 +17,10 @@
 2025_Samsung_AI_Challenge/
 ├── BLIP_Hyperparameter_Tuning.ipynb   # Optuna 기반 탐색 실험
 ├── BLIP_ViT_L_with_less_data.ipynb    # 소량 데이터 실험 노트북
-├── BLIP_ViT_L_Finetuning/                   # 파인튜닝/전처리/스윕 스크립트 모음
+├── BLIP_ViT_L_Finetuning/             # 파인튜닝/전처리/스윕 스크립트 모음
 │   ├── blip_finetune.py / preprocess_vqav2.py / vqav2_dataset.py
 │   ├── run_sweep.py / sweep_config.yaml / quick_start.py
+│   ├── BLIP(ViT-L)_Test.ipynb / Run_QuickStart.ipynb
 │   └── README.md / requirements.txt
 ├── Answersheet.ipynb                  # 제출 전 응답 검증 노트
 ├── optuna_best_params_final.json      # 최종 하이퍼파라미터 기록
@@ -38,7 +39,7 @@
 ---
 
 ## 데이터셋 (VQAv2 from Visual Question Answering 2.0)
-아래 파일들은 [VisualQA 공식 페이지](https://visualqa.org/download.html)에서 내려받아 `dataset/VQAv2/`에 배치했습니다.
+아래 파일들은 [VisualQA 공식 페이지](https://visualqa.org/download.html)에서 내려받아 `dataset/VQAv2/`에 배치했습니다. 이미지/주요 JSON 파일은 용량 문제로 저장소에 포함하지 않았으며, 아래 링크에서 직접 내려받아야 합니다.
 
 | 구분 | 사용 파일 | VisualQA 공식 다운로드 링크 |
 |------|-----------|-----------------------------|
@@ -49,7 +50,7 @@
 | MSCOCO Train Images | `Train/train2014/` | http://images.cocodataset.org/zips/train2014.zip |
 | MSCOCO Val Images | `Validation/val2014/` | http://images.cocodataset.org/zips/val2014.zip |
 
-추가로 실험 속도를 높이기 위해 시드 42 기반의 샘플 파일(`train_10000_seed42.json`, `val_1000_seed42.json`, `val_2000_seed42.json`)을 생성해 `dataset/VQAv2/` 루트에 보관하고 있습니다.
+추가로 실험 속도를 높이기 위해 시드 42 기반의 샘플 파일(`train_10000_seed42.json`, `val_1000_seed42.json`, `val_2000_seed42.json`)을 생성해 `dataset/VQAv2/` 루트에 보관하고 있습니다. 샘플 JSON 역시 원본 데이터를 내려받은 뒤 `preprocess_vqav2.py` 또는 별도 스크립트로 로컬에서 생성해야 합니다.
 
 ---
 
@@ -60,13 +61,13 @@
 
 2. **하이퍼파라미터 탐색 (`BLIP_Hyperparameter_Tuning.ipynb`)**  
    - Optuna로 learning rate, batch size, epoch, weight decay, warmup 스텝을 탐색합니다.  
-   - 총 10개의 trial 중 5개가 성공적으로 수렴했으며, best trial(#2)의 설정은 `optuna_best_params_final.json`으로 저장됩니다.
+   - 총 10개의 trial 중 5개가 성공적으로 수렴했으며, best trial(#2)의 설정은 `optuna_best_params_final.json`으로 저장됩니다(별도의 `run_final_training_with_optimal_params.py` 스크립트는 현재 리포지터리에 포함되어 있지 않으며, JSON의 값을 노트북/스크립트에 직접 반영해야 합니다.).
 
 3. **소량 데이터 실험 (`BLIP_ViT_L_with_less_data.ipynb`)**  
    - GPU 리소스가 제한된 환경에서도 동일한 파이프라인을 실행할 수 있도록 데이터 비율/에폭을 줄인 버전을 제공합니다.
 
 4. **앙상블 기반 추론 & 제출물 생성 (`Answersheet.ipynb`)**  
-   - `dataset/open_dataset/test.csv`의 852개 문제와 `test_input_images/` 이미지를 읽어 **BLIP Teacher Forcing + OpenCLIP + BLIP 생성 기반 RapidFuzz** 점수 조합으로 최종 답안을 만듭니다.  
+   - `dataset/open_dataset/test.csv`의 852개 문제와 `test_input_images/` 이미지를 읽어 **BLIP Teacher Forcing + OpenCLIP + BLIP 생성 기반 RapidFuzz** 점수 조합으로 최종 답안을 만듭니다(공개 데이터는 리포지터리에 포함되어 있지 않으므로 동일한 경로에 준비한 뒤 실행해야 합니다.).
    - `sample_submission.csv`를 덮어쓰는 형태로 결과가 저장됩니다.
 
 ---
@@ -103,20 +104,21 @@
    pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
    pip install transformers optuna wandb datasets pillow matplotlib pandas tqdm
    ```
-2. **데이터 다운로드**  
+2. **데이터 다운로드**
    - 위 표의 링크에서 압축 파일을 받아 `dataset/VQAv2/`에 동일한 구조로 압축을 해제합니다.
-3. **노트북 실행 순서**  
+3. **노트북 실행 순서**
    - `BLIP_Hyperparameter_Tuning.ipynb` → `BLIP_ViT_L_with_less_data.ipynb` (선택) → `Answersheet.ipynb`  
    - GPU 메모리가 부족하면 샘플 JSON 파일로 경로를 변경해 사용합니다.
-4. **Optuna 결과 재사용**  
+4. **Optuna 결과 재사용**
    - `optuna_best_params_final.json`을 참고해 원하는 스크립트/노트북에 동일한 세팅을 입력하면 전체 탐색 과정을 건너뛸 수 있습니다.
 5. **정답 생성 (Answersheet)**
+   - 대회에서 제공된 `dataset/open_dataset/test.csv`, `test_input_images/` 등 테스트 세트는 용량/저작권 문제로 저장소에 포함되어 있지 않습니다. 로컬에 동일한 경로로 배치한 뒤 `Answersheet.ipynb`를 실행하면 제출 파일을 생성할 수 있습니다.
 
 ---
 
 ## 핵심 결과
 - **Best eval loss**: `0.2807` (trial #2, 2025-07-22 06:02:40)
-- **Best parameters**  
+- **Best parameters**
   ```
   learning_rate = 4.4447541666908114e-05
   batch_size    = 16
@@ -124,7 +126,7 @@
   weight_decay  = 0.02014847788415866
   warmup_steps  = 800  (≈ warmup_ratio 0.40 when max_steps ≈ 2000)
   ```
-- **Trials**: 10 total / 5 successful  
+- **Trials**: 10 total / 5 successful
 - **출력물**: Challenge 제출용 Answer Sheet, 손쉬운 재현을 위한 경량 노트북
 
 ---

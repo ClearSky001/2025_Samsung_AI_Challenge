@@ -2,9 +2,10 @@
 
 ## 프로젝트 소개 & 주요 성과
 [삼성 Collegiate Programming Challenge (AI 부문)](https://dacon.io/competitions/official/236500/overview/description)에 참가하기 위해 **BLIP (Bootstrapping Language-Image Pre-training) ViT-L** 모델을 기반으로 Visual Question Answering(VQA) 성능을 끌어올린 실험 노트북과 최적 하이퍼파라미터 산출 결과를 공유합니다.  
-- `BLIP_Hyperparameter_Tuning.ipynb`에서 **Optuna 10회 탐색**을 진행해 `eval_loss 0.2807`을 달성한 조합을 확보했습니다. (`optuna_best_params_final.json` 참고)  
-- `BLIP_ViT_L_with_less_data.ipynb`는 **데이터 20%만 사용한 경량 파인튜닝 전략**으로 동일한 실험 흐름을 빠르게 재현할 수 있도록 구성되어 있습니다.  
-- `Answersheet.ipynb`는 최종 리더보드 제출을 위한 예측 생성/검증 과정을 정리한 노트입니다.
+- `BLIP_Hyperparameter_Tuning.ipynb`에서 **Optuna 10회 탐색**을 진행해 `eval_loss 0.2807`을 달성한 조합을 확보했습니다. (`optuna_best_params_final.json` 참고) 최적 세팅은 `run_final_training_with_optimal_params.py`에서 자동으로 불러와 전체 학습을 수행합니다.  
+- `BLIP_ViT_L_with_less_data.ipynb`는 **데이터 20%만 사용한 경량 파인튜닝 전략**으로 동일한 실험 흐름을 빠르게 재현할 수 있도록 구성되어 있습니다. RTX 4080 Laptop 한정 최적화가 필요한 경우 `BLIP_ViT_L_RTX4080_Optimized.ipynb` 및 `_AttnFixed_Sampled.ipynb`를 통해 VRAM 12GB 환경에서도 안정적으로 재현할 수 있습니다.  
+- `Answersheet.ipynb`는 최종 리더보드 제출을 위한 예측 생성/검증 과정을 정리한 노트입니다. BLIP Teacher Forcing + OpenCLIP + BLIP 생성 기반 RapidFuzz 점수 조합, TTA, confidence weighting을 포함하는 최신 파이프라인을 반영했습니다.  
+- `BLIP_ViT_L_Finetuning/` 모듈에는 `blip_finetune.py`, `run_sweep.py`, `preprocess_vqav2.py`, `quick_start.py`, `requirements.txt` 등이 포함되어 있어 CLI 기반 실험 및 W&B Sweep 자동화를 지원합니다.
 
 ### 최종 성과
 테스트 셋 정확도를 약 25%에서 **66%** 로 향상시켰으며, 전체 참가자 중 **상위 9%** 를 기록했습니다.
@@ -16,6 +17,10 @@
 2025_Samsung_AI_Challenge/
 ├── BLIP_Hyperparameter_Tuning.ipynb   # Optuna 기반 탐색 실험
 ├── BLIP_ViT_L_with_less_data.ipynb    # 소량 데이터 실험 노트북
+├── BLIP_ViT_L_Finetuning/                   # 파인튜닝/전처리/스윕 스크립트 모음
+│   ├── blip_finetune.py / preprocess_vqav2.py / vqav2_dataset.py
+│   ├── run_sweep.py / sweep_config.yaml / quick_start.py
+│   └── README.md / requirements.txt
 ├── Answersheet.ipynb                  # 제출 전 응답 검증 노트
 ├── optuna_best_params_final.json      # 최종 하이퍼파라미터 기록
 ├── .gitignore / LICENSE
@@ -28,7 +33,7 @@
 - **언어**: Python 3.10+
 - **모델/프레임워크**: PyTorch, HuggingFace Transformers, BLIP ViT-L
 - **실험 자동화**: Optuna (TPE Sampler), Weights & Biases(선택), CUDA 12.x
-- **데이터/유틸**: pandas, numpy, tqdm, json, matplotlib (EDA 및 시각화)
+- **데이터/유틸**: pandas, numpy, tqdm, json, matplotlib, pillow, RapidFuzz (EDA, 시각화, 문자열 유사도)
 
 ---
 

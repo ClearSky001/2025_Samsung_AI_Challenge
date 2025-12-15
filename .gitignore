@@ -205,3 +205,20 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# BLIP Fine-tuning specific
+optuna-trial-*/
+quick-test-output/
+wandb/
+
+# Model checkpoints (if any)
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+checkpoint-*/
+
+# Training outputs
+training_args.bin
+trainer_state.json

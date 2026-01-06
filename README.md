@@ -67,8 +67,12 @@
    - GPU 리소스가 제한된 환경에서도 동일한 파이프라인을 실행할 수 있도록 데이터 비율/에폭을 줄인 버전을 제공합니다.
 
 4. **앙상블 기반 추론 & 제출물 생성 (`Answersheet.ipynb`)**  
-   - `dataset/open_dataset/test.csv`의 852개 문제와 `test_input_images/` 이미지를 읽어 **BLIP Teacher Forcing + OpenCLIP + BLIP 생성 기반 RapidFuzz** 점수 조합으로 최종 답안을 만듭니다(공개 데이터는 리포지터리에 포함되어 있지 않으므로 동일한 경로에 준비한 뒤 실행해야 합니다.).
-   - `sample_submission.csv`를 덮어쓰는 형태로 결과가 저장됩니다.
+   - 아래 경로에 공개 테스트 데이터를 배치한 뒤 실행합니다(리포지터리에 포함되어 있지 않음).
+     - 문제 CSV: `dataset/open_dataset/test.csv`
+     - 이미지 폴더: `dataset/open_dataset/test_input_images/`
+     - 제출 샘플: `dataset/open_dataset/sample_submission.csv`
+   - 위 데이터를 읽어 **BLIP Teacher Forcing + OpenCLIP + BLIP 생성 기반 RapidFuzz** 점수 조합으로 최종 답안을 만듭니다.
+   - 결과는 `dataset/open_dataset/sample_submission.csv`의 `answer` 컬럼을 덮어쓰는 형태로 저장됩니다.
 
 ---
 

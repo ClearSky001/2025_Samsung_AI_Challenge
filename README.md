@@ -116,7 +116,8 @@
    - GPU 메모리가 부족하면 샘플 JSON 파일로 경로를 변경해 사용합니다.
 4. **Optuna 결과 재사용**
    - `optuna_best_params_final.json`을 `blip_finetune.py`에 적용하려면 `--best_params_path`를 사용하세요.
-5. - `Answersheet.ipynb` 상단의 경로 변수를 로컬에 맞게 지정해야 합니다.
+5. **정답 생성 (Answersheet)**
+   - `Answersheet.ipynb` 상단의 경로 변수를 로컬에 맞게 지정해야 합니다.
 
 ---
 

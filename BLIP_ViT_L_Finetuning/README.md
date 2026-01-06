@@ -33,7 +33,12 @@ wandb login
 
 ## 💻 사용법
 
-### 1. 단일 실험 실행 (테스트용)
+### 1. 전처리 실행
+```bash
+python preprocess_vqav2.py --base_dir ../dataset/VQAv2
+```
+
+### 2. 단일 실험 실행 (테스트용)
 ```bash
 # 빠른 테스트를 위한 소규모 데이터셋
 python run_sweep.py single --max_train_samples 1000 --max_val_samples 500
@@ -42,7 +47,7 @@ python run_sweep.py single --max_train_samples 1000 --max_val_samples 500
 python blip_finetune.py --num_train_epochs 3 --per_device_train_batch_size 16
 ```
 
-### 2. 하이퍼파라미터 Sweep 실행
+### 3. 하이퍼파라미터 Sweep 실행
 ```bash
 # 기본 설정으로 20개 실험 실행
 python run_sweep.py --count 20
@@ -51,7 +56,7 @@ python run_sweep.py --count 20
 python run_sweep.py --project "my-blip-experiment" --count 10
 ```
 
-### 3. 커스텀 파라미터로 실험
+### 4. 커스텀 파라미터로 실험
 ```bash
 python blip_finetune.py \
     --learning_rate 3e-5 \
@@ -71,9 +76,14 @@ python blip_finetune.py \
 - `warmup_ratio`: 워밍업 비율 (기본값: 0.1)
 
 ### 데이터 관련
+- `train_data_path`: 전처리된 train JSON 경로 (기본값: ../dataset/VQAv2/train.json)
+- `val_data_path`: 전처리된 val JSON 경로 (기본값: ../dataset/VQAv2/val.json)
 - `max_train_samples`: 최대 학습 샘플 수 (테스트용)
 - `max_val_samples`: 최대 검증 샘플 수 (테스트용)
 - `max_length`: 최대 시퀀스 길이 (기본값: 512)
+
+### Optuna 관련
+- `best_params_path`: Optuna 결과 JSON 경로 (기본값: ../optuna_best_params_final.json)
 
 ### WandB 관련
 - `wandb_project`: WandB 프로젝트명

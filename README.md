@@ -22,13 +22,13 @@
  2025_Samsung_AI_Challenge/
  ├── BLIP_Hyperparameter_Tuning.ipynb   # Optuna 기반 탐색 실험
  ├── BLIP_ViT_L_with_less_data.ipynb    # 소량 데이터 실험 노트북
--├── BLIP_ViT_L_Finetuning/                   # 파인튜닝/전처리/스윕 스크립트 모음
-+├── BLIP_ViT_L_Finetuning/             # 파인튜닝/전처리/스윕 스크립트 모음
+ ├── BLIP_ViT_L_Finetuning/                   # 파인튜닝/전처리/스윕 스크립트 모음
+ ├── BLIP_ViT_L_Finetuning/             # 파인튜닝/전처리/스윕 스크립트 모음
  │   ├── blip_finetune.py / preprocess_vqav2.py / vqav2_dataset.py
  │   ├── run_sweep.py / sweep_config.yaml / quick_start.py
-+│   ├── BLIP(ViT-L)_Test.ipynb / Run_QuickStart.ipynb
+ │   ├── BLIP(ViT-L)_Test.ipynb / Run_QuickStart.ipynb
  │   └── README.md / requirements.txt
- ├── Answersheet.ipynb                  # 제출 전 응답 검증 노트
+ ├── Answersheet.ipynb                  # 제출 전 응답 생성 코드(파인튜닝된 BLIP에 CLIP 모델로 앙상블하여 답안지 생성)
  ├── optuna_best_params_final.json      # 최종 하이퍼파라미터 기록
  ├── .gitignore / LICENSE
  └── README.md

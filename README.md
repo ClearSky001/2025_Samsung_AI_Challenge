@@ -23,7 +23,8 @@
  │   ├── run_sweep.py / sweep_config.yaml / quick_start.py
  │   ├── BLIP(ViT-L)_Test.ipynb / Run_QuickStart.ipynb
  │   └── README.md / requirements.txt
- ├── Answersheet.ipynb                  # 제출 전 응답 생성 코드(파인튜닝된 BLIP에 CLIP 모델로 앙상블하여 답안지 생성)
+ ├── Answersheet.ipynb # 제출 전 응답 생성 코드(파인튜닝된 BLIP에 CLIP 모델로 앙상블하여 답안지 생성)
+ ├── run_final_training_with_optimal_params.py  # Optuna 최적 파라미터로 최종 학습 실행
  ├── optuna_best_params_final.json      # 최종 하이퍼파라미터 기록
  ├── .gitignore / LICENSE
  └── README.md

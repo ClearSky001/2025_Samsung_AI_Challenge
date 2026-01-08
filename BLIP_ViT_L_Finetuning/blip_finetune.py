@@ -1,8 +1,14 @@
-import os
 import argparse
 import json
+import os
 from dataclasses import dataclass
-from typing import Dict, List
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
+
+import numpy as np
+import torch
+from PIL import Image
+from tqdm import tqdm
 
 from transformers import (
     BlipProcessor, 
@@ -13,40 +19,9 @@ from transformers import (
 )
 
 from torch.utils.data import Dataset
-from tqdm import tqdm
-import numpy as np
-import torch
-from PIL import Image
 
-# 하이퍼파라미터 로드
-import os
-import argparse
-import json
-import torch
-import numpy as np
-from tqdm import tqdm
-import os
-from dataclasses import dataclass
-from typing import Dict, List
-from PIL import Image
+processor = None
 
-from transformers import (
-    BlipProcessor, 
-    BlipForQuestionAnswering,
-    TrainingArguments,
-    Trainer,
-    EarlyStoppingCallback
-)
-
-from torch.utils.data import Dataset
-from tqdm import tqdm
-import numpy as np
-import torch
-from PIL import Image
-
-# 하이퍼파라미터 로드
-with open("/content/drive/MyDrive/Colab Notebooks/2025_Samsung_AI_Challenge/optuna_best_params_final.json", "r") as f:
-    best_params = json.load(f)["best_params"]
 def parse_args():
     parser = argparse.ArgumentParser(description="BLIP VQAv2 fine-tuning")
     parser.add_argument("--best_params_path", default="../optuna_best_params_final.json")

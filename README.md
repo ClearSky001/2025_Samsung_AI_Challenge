@@ -1,5 +1,152 @@
- # 2025 Samsung AI Challenge – BLIP VQA Fine-tuning
- 
+# 2025 Samsung AI Challenge – BLIP VQA Fine-tuning
+
+**English** | [한국어](#한국어)
+
+## Project Overview & Key Results
+This repository shares the experiment notebooks and optimal hyperparameter results used to improve Visual Question Answering (VQA) performance with the **BLIP (Bootstrapping Language-Image Pre-training) ViT-L** model for the [Samsung Collegiate Programming Challenge (AI Track)](https://dacon.io/competitions/official/236500/overview/description).
+
+- `BLIP_Hyperparameter_Tuning.ipynb` ran **10 Optuna trials** and found the configuration that reached `eval_loss 0.2807`. (See `optuna_best_params_final.json`.)
+- `BLIP_ViT_L_with_less_data.ipynb` uses a **lightweight fine-tuning strategy with only 20% of the data**, so the same experiment flow can be reproduced quickly.
+- `Answersheet.ipynb` documents how predictions were generated and checked for the final leaderboard submission. To have **the AI model write the final answers**, it includes a pipeline that combines BLIP Teacher Forcing + OpenCLIP + RapidFuzz scores on BLIP-generated answers, with TTA and confidence weighting.
+- The `BLIP_ViT_L_Finetuning/` module contains `blip_finetune.py`, `run_sweep.py`, `preprocess_vqav2.py`, `quick_start.py`, `requirements.txt`, and more, supporting CLI-based experiments and W&B Sweep automation. You can also quickly try the scripts in a notebook environment with `BLIP(ViT-L)_Test.ipynb` and `Run_QuickStart.ipynb`.
+
+### Final Results
+Improved test-set accuracy from about 25% to **66%**, ranking in the **top 9%** of all participants.
+
+---
+
+## Repository Structure
+```
+2025_Samsung_AI_Challenge/
+├── BLIP_Hyperparameter_Tuning.ipynb   # Optuna-based search experiments
+├── BLIP_ViT_L_with_less_data.ipynb    # Small-data experiment notebook
+├── BLIP_ViT_L_Finetuning/             # Fine-tuning / preprocessing / sweep scripts
+│   ├── blip_finetune.py / preprocess_vqav2.py / vqav2_dataset.py
+│   ├── run_sweep.py / sweep_config.yaml / quick_start.py
+│   ├── BLIP(ViT-L)_Test.ipynb / Run_QuickStart.ipynb
+│   └── README.md / requirements.txt
+├── Answersheet.ipynb # Answer generation before submission (ensembles the fine-tuned BLIP with a CLIP model to build the answer sheet)
+├── run_final_training_with_optimal_params.py  # Runs final training with the best Optuna parameters
+├── optuna_best_params_final.json      # Final hyperparameter record
+├── .gitignore / LICENSE
+└── README.md
+```
+
+---
+
+## Tech Stack
+- **Language**: Python 3.10+
+- **Models/Frameworks**: PyTorch, HuggingFace Transformers, BLIP ViT-L
+- **Experiment automation**: Optuna (TPE Sampler), Weights & Biases (optional), CUDA 12.x
+- **Data/Utilities**: pandas, numpy, tqdm, json, matplotlib, pillow, RapidFuzz (EDA, visualization, string similarity)
+
+---
+
+## Dataset (VQAv2 from Visual Question Answering 2.0)
+- The files below were downloaded from the [official VisualQA page](https://visualqa.org/download.html) and placed in `dataset/VQAv2/`. **Images and raw JSON files are not included in this repository because of their size; please download them from the links below.**
+
+| Type | File used | Official VisualQA download link |
+|------|-----------|-----------------------------|
+| Train Questions | `Train/questions/v2_OpenEnded_mscoco_train2014_questions.json` | https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Questions_Train_mscoco.zip |
+| Train Annotations | `Train/annotations/v2_mscoco_train2014_annotations.json` | https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Annotations_Train_mscoco.zip |
+| Validation Questions | `Validation/questions/v2_OpenEnded_mscoco_val2014_questions.json` | https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Questions_Val_mscoco.zip |
+| Validation Annotations | `Validation/annotations/v2_mscoco_val2014_annotations.json` | https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Annotations_Val_mscoco.zip |
+| MSCOCO Train Images | `Train/train2014/` | http://images.cocodataset.org/zips/train2014.zip |
+| MSCOCO Val Images | `Validation/val2014/` | http://images.cocodataset.org/zips/val2014.zip |
+
+To speed up experiments, seed-42 sample files (`train_10000_seed42.json`, `val_1000_seed42.json`, `val_2000_seed42.json`) were also created and kept at the root of `dataset/VQAv2/`. (These sample JSON files are not stored in the repository either, to save space.)
+
+> **Note:** This repository is maintained **for sharing code and notebooks**. Some scripts/notebooks take data paths as arguments, so set the paths to match your local environment before running them.
+
+---
+
+## Experiment Workflow
+1. **Data preprocessing & sampling**  
+   - Download the VisualQA question/answer JSON files and the MSCOCO images, then organize them into the `dataset/VQAv2/Train` and `Validation` folder structure.  
+   - Create subsets such as `train_10000_seed42.json` for lightweight experiments.
+   - By default, the preprocessing script creates `dataset/VQAv2/train.json` and `dataset/VQAv2/val.json`. Use the `--base_dir`, `--train_output`, and `--val_output` arguments to change the paths if needed.
+
+2. **Hyperparameter search (`BLIP_Hyperparameter_Tuning.ipynb`)**  
+   - Uses Optuna to search the learning rate, batch size, epochs, weight decay, and warmup steps.
+   - 5 of the 10 trials converged successfully, and the settings of the best trial (#2) are saved to `optuna_best_params_final.json`. `blip_finetune.py` reads this JSON and applies it to the training parameters. (Change the path with `--best_params_path`.)
+
+3. **Small-data experiment (`BLIP_ViT_L_with_less_data.ipynb`)**  
+   - Provides a version with a smaller data ratio and fewer epochs, so the same pipeline can run even with limited GPU resources.
+
+4. **Ensemble inference & submission file (`Answersheet.ipynb`)**  
+   - Reads the 852 questions in `dataset/open_dataset/test.csv` and the images in `test_input_images/`, then builds the final answers by combining **BLIP Teacher Forcing + OpenCLIP + RapidFuzz on BLIP-generated answers** scores. (The public data is not included in the repository, so prepare it at the same paths before running.)
+   - Results are saved by overwriting `sample_submission.csv`.
+   - Edit the data path variables at the top of the notebook to match your local environment.
+
+---
+
+## Answersheet.ipynb – How the Answers Are Built
+1. **Model loading & parameter limit check**  
+   - Loads the fine-tuned BLIP-VQA (`blip_finetuned_model_less_data/checkpoint-1250`), OpenCLIP ViT-L/14 (pretrained `openai`), and FLAN-T5 Small, and verifies that the total parameter count is 3B or less.
+2. **Question type analysis**  
+   - Labels the questions in the test CSV as `what_is`, `why`, `what_might`, `cultural`, etc., and computes the share of each type.
+3. **Teacher Forcing Score (TF)**  
+   - Uses three prompt templates per type with weights (0.5/0.3/0.2) and negates the BLIP loss to score how well each option fits.
+4. **OpenCLIP Score (CLIP)**  
+   - Tokenizes the question + option sentences and applies a length penalty to the image-text cosine similarity.
+5. **Multi-generation Score (GEN)**  
+   - Generates 2–3 answers with BLIP, measures the string similarity to each option with RapidFuzz (`ratio/partial/token_sort`), and uses a weighted average (0.4/0.3/0.3).
+6. **Normalization & per-question weights**  
+   - Applies a Z-score → sigmoid transform using historical means/standard deviations (`tf:-3.8±0.9`, `clip:0.28±0.16`, `gen:0.22±0.14`).  
+   - Assigns different (TF, CLIP, GEN) weights for each question type (e.g., `what_is`: 0.30/0.55/0.15, `why`: 0.70/0.20/0.10).
+7. **TTA + Confidence Weighting**  
+   - Augments each image with four transforms (Resize, CenterCrop, RandomCrop, ColorJitter), then builds a weighted sum from each transform's scores and a confidence based on `max(score)-mean(score)`.
+8. **Softmax and final choice**  
+   - Passes the TTA result through a softmax with temperature=1.2 to get a probability vector, then picks A/B/C/D with argmax.  
+   - For debugging, prints the raw scores, probabilities, and chosen option for the first 5 questions to the console.
+9. **Save the submission file**  
+   - Replaces the `answer` column of `sample_submission.csv` with the ensemble predictions and uses it as the final submission file.
+
+---
+
+## Usage
+1. **Environment setup**
+   ```bash
+   conda create -n samsung-ai-2025 python=3.10 -y
+   conda activate samsung-ai-2025
+   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+   pip install transformers optuna wandb datasets pillow matplotlib pandas tqdm
+   ```
+2. **Download the data**
+   - Download the archives from the links in the table above and extract them into `dataset/VQAv2/` with the same structure.
+3. **Notebook run order**  
+   - `BLIP_Hyperparameter_Tuning.ipynb` → `BLIP_ViT_L_with_less_data.ipynb` (optional) → `Answersheet.ipynb`  
+   - If GPU memory is insufficient, switch the paths to the sample JSON files.
+4. **Reuse the Optuna results**
+   - To apply `optuna_best_params_final.json` to `blip_finetune.py`, use `--best_params_path`.
+5. **Generate answers (Answersheet)**
+   - Set the path variables at the top of `Answersheet.ipynb` to match your local environment.
+
+---
+
+## Reproducibility Check
+- **Possible**: If you prepare the VQAv2 data and the test images/CSV locally and set the path arguments of each script/notebook, you can run training and inference.
+- **Not possible**: It fails without the data or if the paths are not updated. (The repository is for sharing code and notebooks.)
+
+---
+
+## Key Results
+- **Best eval loss**: `0.2807` (trial #2, 2025-07-22 06:02:40)
+- **Best parameters**  
+  ```
+  learning_rate = 4.4447541666908114e-05
+  batch_size    = 16
+  num_epochs    = 2
+  weight_decay  = 0.02014847788415866
+  warmup_steps  = 800  (≈ warmup_ratio 0.40 when max_steps ≈ 2000)
+  ```
+- **Trials**: 10 total / 5 successful  
+- **Outputs**: Answer sheet for the challenge submission, lightweight notebook for easy reproduction
+
+---
+
+# 한국어
+
  ## 프로젝트 소개 & 주요 성과
  [삼성 Collegiate Programming Challenge (AI 부문)](https://dacon.io/competitions/official/236500/overview/description)에 참가하기 위해 **BLIP (Bootstrapping Language-Image Pre-training) ViT-L** 모델을 기반으로 Visual Question Answering(VQA) 성능을 끌어올린 실험 노트북과 최적 하이퍼파라미터 산출 결과를 공유합니다.
 

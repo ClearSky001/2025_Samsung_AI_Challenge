@@ -81,6 +81,11 @@ To speed up experiments, seed-42 sample files (`train_10000_seed42.json`, `val_1
 ---
 
 ## Answersheet.ipynb – How the Answers Are Built
+
+<p align="center">
+  <img src="assets/answersheet_pipeline_en.png" alt="Overall pipeline of the answer ensemble"/>
+</p>
+
 1. **Model loading & parameter limit check**  
    - Loads the fine-tuned BLIP-VQA (`blip_finetuned_model_less_data/checkpoint-1250`), OpenCLIP ViT-L/14 (pretrained `openai`), and FLAN-T5 Small, and verifies that the total parameter count is 3B or less.
 2. **Question type analysis**  
@@ -226,6 +231,11 @@ To speed up experiments, seed-42 sample files (`train_10000_seed42.json`, `val_1
  ---
  
  ## Answersheet.ipynb – 정답 구성 과정
+
+<p align="center">
+  <img src="assets/answersheet_pipeline.png" alt="구현한 시스템의 전체 파이프라인 요약"/>
+</p>
+
  1. **모델 로딩 & 파라미터 제약 확인**  
     - Fine-tuned BLIP-VQA (`blip_finetuned_model_less_data/checkpoint-1250`), OpenCLIP ViT-L/14 (pretrained `openai`), FLAN-T5 Small을 로딩하고 총 파라미터가 3B 이하임을 검증합니다.
  2. **문항 유형 분석**  
